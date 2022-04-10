@@ -6,13 +6,23 @@ import ReactDOMServer from 'react-dom/server';
 import express from 'express';
 
 import App from '../src/App';
+import { DataProvider } from '../src/context/DataContext';
+import { getRepos } from './api';
 
 const PORT = process.env.PORT || 3006;
 const app = express();
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   console.time("server side rendering");
-  const app = ReactDOMServer.renderToString(<App />);
+  const data = {
+    repos: await getRepos()
+  };
+  const app = ReactDOMServer.renderToString(
+    <DataProvider data={data}>
+      <App />
+    </DataProvider>  
+  );
+  console.log(app);
   console.timeEnd("server side rendering");
   const indexFile = path.resolve('./build/index.html');
 

@@ -4,9 +4,7 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   entry: './server/index.js',
   target: 'node',
-  externals: [nodeExternals({
-    allowlist: ['react']
-  })],
+  externals: [nodeExternals()],
   output: {
     path: path.resolve('server-build'),
     filename: 'index.js'
