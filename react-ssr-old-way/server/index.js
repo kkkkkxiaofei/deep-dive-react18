@@ -1,13 +1,12 @@
 import path from 'path';
 import fs from 'fs';
-
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import express from 'express';
-
 import App from '../src/App';
 import { DataProvider } from '../src/context/DataContext';
 import { getRepos } from './api';
+import APIRouter from './router/APIRouter';
 
 const PORT = process.env.PORT || 3006;
 const app = express();
@@ -39,6 +38,8 @@ app.get('/', async (req, res) => {
 });
 
 app.use(express.static('./build'));
+
+app.use('/api', APIRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

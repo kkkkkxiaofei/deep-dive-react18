@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "./Sidebar";
+import Detail from "./Detail";
 import logo from "./logo.svg";
 import "./App.scss";
 
@@ -13,6 +14,7 @@ function App() {
         <header className="header">
           <img src={logo} className="logo" alt="logo" />
         </header>
+        <Detail name="detail" />
       </div>
     </div>
   );
