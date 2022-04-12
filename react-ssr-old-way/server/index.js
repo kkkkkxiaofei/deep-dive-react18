@@ -11,6 +11,18 @@ import APIRouter from './router/APIRouter';
 const PORT = process.env.PORT || 3006;
 const app = express();
 
+app.use((req, res, next) => {
+  if (req.url.endsWith(".js")) {
+    setTimeout(next, 10000);
+  } else {
+    next();
+  }
+});
+
+app.use(express.static('./build'));
+
+app.use('/api', APIRouter);
+
 app.get('/', async (req, res) => {
   console.time("server side rendering");
   const data = {
@@ -21,7 +33,6 @@ app.get('/', async (req, res) => {
       <App />
     </DataProvider>  
   );
-  console.log(app);
   console.timeEnd("server side rendering");
   const indexFile = path.resolve('./build/index.html');
 
@@ -37,9 +48,8 @@ app.get('/', async (req, res) => {
   });
 });
 
-app.use(express.static('./build'));
 
-app.use('/api', APIRouter);
+
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const start = () => {
-  console.log('=====start=====');
   ReactDOM.hydrate(
     <React.StrictMode>
       <App />

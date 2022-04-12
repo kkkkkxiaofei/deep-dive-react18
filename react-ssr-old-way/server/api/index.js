@@ -10,6 +10,6 @@ const fakeRepos = [
 export const getRepos = async () => {
   return new Promise((resolve) => setTimeout(() => {
     resolve(fakeRepos);
-  }, 0));
+  }, 3000));
 };
 

@@ -3,17 +3,19 @@ import { DataContext } from "./context/DataContext";
 import * as API from "./api";
 
 function Detail({ name }) {
-  console.log('=======0=======');
   const [data, setData] = useState([]);
+  const [selected, setSelected] = useState([]);
   useEffect(async () => {
-    console.log('=======1=======');
     const repos = await API.getRepos();
     setData(repos);
   }, []);
+  const handleClick = () => {
+    setSelected(name);
+  }
   return (
     <div>
-      <div>123</div>
-      <div>{name}</div>
+      <div onClick={handleClick}>{name}</div>
+      <div>Selected: {selected}</div>
       {
         data.map(({ name }) => (<div>{name}</div>))  
       }

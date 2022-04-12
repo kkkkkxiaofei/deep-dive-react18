@@ -11,10 +11,10 @@ function App() {
         <Sidebar name="side bar" />
       </div>
       <div className="content">
+        <Detail name="detail" />
         <header className="header">
           <img src={logo} className="logo" alt="logo" />
         </header>
-        <Detail name="detail" />
       </div>
     </div>
   );
