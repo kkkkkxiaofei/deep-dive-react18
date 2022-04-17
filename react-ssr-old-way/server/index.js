@@ -13,43 +13,39 @@ const app = express();
 
 app.use((req, res, next) => {
   if (req.url.endsWith(".js")) {
-    setTimeout(next, 10000);
+    setTimeout(next, 3000);
   } else {
     next();
+  }
+});
+
+app.get('/', async (req, res) => {
+  console.time("server side rendering");
+  const data = {
+    repos: await getRepos(),
+    selectedRepo: null,
+  };
+  const app = ReactDOMServer.renderToString(
+    <DataProvider data={data}>
+      <App />
+    </DataProvider>
+  );
+  console.timeEnd("server side rendering");
+  const indexFile = path.resolve('./build/index.html');
+  try {
+    const template = fs.readFileSync(indexFile, "utf8");
+    res.send(template.replace('<div id="root"></div>', `
+      <script>window.__INIT_CONTEXT__ = ${JSON.stringify(data)}</script>
+      <div id="root">${app}</div>
+    `));
+  } catch (e) {
+    res.status(500).send("Failed to read html template!");
   }
 });
 
 app.use(express.static('./build'));
 
 app.use('/api', APIRouter);
-
-app.get('/', async (req, res) => {
-  console.time("server side rendering");
-  const data = {
-    repos: await getRepos()
-  };
-  const app = ReactDOMServer.renderToString(
-    <DataProvider data={data}>
-      <App />
-    </DataProvider>  
-  );
-  console.timeEnd("server side rendering");
-  const indexFile = path.resolve('./build/index.html');
-
-  fs.readFile(indexFile, 'utf8', (err, data) => {
-    if (err) {
-      console.error('Something went wrong:', err);
-      return res.status(500).send('Oops, better luck next time!');
-    }
-  
-    return res.send(
-      data.replace('<div id="root"></div>', `<div id="root">${app}</div>`)
-    );
-  });
-});
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

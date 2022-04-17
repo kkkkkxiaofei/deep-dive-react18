@@ -1,24 +1,25 @@
-import React, { useContext, useEffect, useState } from "react";
-import { DataContext } from "./context/DataContext";
+import React, { useMemo } from "react";
+import { DataContext, useData } from "./context/DataContext";
 import * as API from "./api";
 
-function Detail({ name }) {
-  const [data, setData] = useState([]);
-  const [selected, setSelected] = useState([]);
-  useEffect(async () => {
-    const repos = await API.getRepos();
-    setData(repos);
-  }, []);
-  const handleClick = () => {
-    setSelected(name);
-  }
+const Detail = () => {
+  const { selectedRepo } = useData(DataContext) || {};
+  const repoDetails = useMemo(async () => {
+    if (selectedRepo) {
+      return await API.getRepo(selectedRepo.name);
+    }
+    return null;
+  }, [selectedRepo]);
+
   return (
     <div>
-      <div onClick={handleClick}>{name}</div>
-      <div>Selected: {selected}</div>
-      {
-        data.map(({ name }) => (<div>{name}</div>))  
-      }
+      <h1>Repo details</h1>
+      {repoDetails && (
+        <div>
+          <div>{repoDetails.name}</div>
+          <div>{repoDetails.description}</div>
+        </div>
+      )}
     </div>
   );
 };

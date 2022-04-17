@@ -1,12 +1,21 @@
-import React, { useContext } from "react";
-import { DataContext } from "./context/DataContext";
+import React from "react";
+import { DataContext, useData } from "./context/DataContext";
 
-function Sidebar({ name }) {
-  const { repos } = useContext(DataContext);
+const Sidebar = () => {
+  const { repos = [], selectedRepo, updateSelectedRepo } = useData(DataContext);
+  const handleClick = (repo) => () => updateSelectedRepo(repo);
   return (
     <div>
-      <div>{name}</div>
-      {repos.map(({ name }) => (<div key={name}>{name}</div>))}
+      <h1>Repos</h1>
+      {repos.map((repo) => (
+        <div
+          key={repo.id}
+          className={`${selectedRepo?.id === repo.id ? "hightlight" : ""}`}
+          onClick={handleClick(repo)}
+        >
+          {repo.name}
+        </div>
+      ))}
     </div>
   );
 };

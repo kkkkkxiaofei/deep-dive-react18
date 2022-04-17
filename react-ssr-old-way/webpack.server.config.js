@@ -43,12 +43,11 @@ module.exports = {
     {
       apply: (compiler) => {
         compiler.hooks.watchRun.tap("WatchRunPlugin", (compilation) => {
-          console.log(compilation.modifiedFiles, '=========='); 
           const clientChanged = [...(compilation.modifiedFiles ?? [])].some(filePath => filePath.includes('/src/'));
           if (clientChanged) {
             console.log("building client components...");
             exec("npm run build", (err, stdout, stderr) => {
-              if (stdout) process.stdout.write(stdout);
+              // if (stdout) process.stdout.write(stdout);
               if (stderr) process.stderr.write(stderr);
             });
           }

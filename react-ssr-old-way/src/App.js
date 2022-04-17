@@ -1,20 +1,18 @@
 import React from "react";
 import Sidebar from "./Sidebar";
 import Detail from "./Detail";
-import logo from "./logo.svg";
 import "./App.scss";
+import Snapshot from "./Snapshot";
 
-function App() {
+const App = () => {
   return (
     <div className="app">
       <div className="sideBar">
-        <Sidebar name="side bar" />
+        <Sidebar />
       </div>
       <div className="content">
-        <Detail name="detail" />
-        <header className="header">
-          <img src={logo} className="logo" alt="logo" />
-        </header>
+        <Snapshot />
+        <Detail/>
       </div>
     </div>
   );
