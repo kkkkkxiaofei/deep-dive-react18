@@ -6,7 +6,6 @@ import logo from "./logo.svg";
 const Snapshot = () => {
   const [metrics, setMetrics] = useState([]);
   useEffect(async () => {
-    console.log("========1");
     const metrics = await API.getMetrics();
     setMetrics(metrics);
   }, []);

@@ -18,10 +18,8 @@ export const getRepo = (repo) => baseRequest(`repos/reactjs/${repo}`);
 
 export const getMetrics = async () => {
   const repos = await getRepos();
-  console.log(repos, '------------');
   return Promise.all(repos.map(({ name }) => getRepo(name))).then(
     (repoDetails) => {
-      console.log(repoDetails[0], '------------');
       const metrics = repoDetails.filter(Boolean).reduce(
         (result, current) => ({
           ...result,

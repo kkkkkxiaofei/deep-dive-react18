@@ -13,9 +13,3 @@ export const DataProvider = ({ data, children }) => {
     <DataContext.Provider value={exposedValue}>{children}</DataContext.Provider>
   );
 };
-
-export const useData = () => {
-  const ctx = useContext(DataContext);
-  const result = ctx ?? window.__INIT_CONTEXT__;
-  return result;
-};

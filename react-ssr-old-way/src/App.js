@@ -3,19 +3,22 @@ import Sidebar from "./Sidebar";
 import Detail from "./Detail";
 import "./App.scss";
 import Snapshot from "./Snapshot";
+import { DataProvider } from "./context/DataContext";
 
-const App = () => {
+const App = ({ data }) => {
   return (
-    <div className="app">
-      <div className="sideBar">
-        <Sidebar />
+    <DataProvider data={data}>
+      <div className="app">
+        <div className="sideBar">
+          <Sidebar /> 
+        </div>
+        <div className="content">
+          <Snapshot />
+          <Detail />
+        </div>
       </div>
-      <div className="content">
-        <Snapshot />
-        <Detail/>
-      </div>
-    </div>
+    </DataProvider>
   );
-}
+};
 
 export default App;

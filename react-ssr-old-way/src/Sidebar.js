@@ -1,8 +1,8 @@
 import React from "react";
-import { DataContext, useData } from "./context/DataContext";
+import { useData } from "./hook";
 
 const Sidebar = () => {
-  const { repos = [], selectedRepo, updateSelectedRepo } = useData(DataContext);
+  const { repos = [], selectedRepo, updateSelectedRepo } = useData();
   const handleClick = (repo) => () => updateSelectedRepo(repo);
   return (
     <div>

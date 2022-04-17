@@ -1,25 +1,29 @@
-import React, { useMemo } from "react";
-import { DataContext, useData } from "./context/DataContext";
-import * as API from "./api";
+import React, { useCallback } from "react";
+import { getRepo } from "./api";
+import { useData, useFetch } from "./hook";
 
 const Detail = () => {
-  const { selectedRepo } = useData(DataContext) || {};
-  const repoDetails = useMemo(async () => {
-    if (selectedRepo) {
-      return await API.getRepo(selectedRepo.name);
+  const { selectedRepo } = useData();
+  const memoGetRepo = useCallback(() => getRepo(selectedRepo.name), [selectedRepo]);
+  const result = useFetch(memoGetRepo);
+  const startRender = () => {
+    const { data, isPending } = result;
+    if (isPending) {
+      return <div>loading...</div>;
+    } else {
+      return data ? (
+        <div>
+          <div>{data.name}</div>
+          <div>{data.description}</div>
+        </div>
+      ) : null;
     }
-    return null;
-  }, [selectedRepo]);
+  };
 
   return (
     <div>
       <h1>Repo details</h1>
-      {repoDetails && (
-        <div>
-          <div>{repoDetails.name}</div>
-          <div>{repoDetails.description}</div>
-        </div>
-      )}
+      {startRender()}
     </div>
   );
 };
