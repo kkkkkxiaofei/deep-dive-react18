@@ -1,11 +1,13 @@
+import "dotenv/config";
 import path from "path";
 import fs from "fs";
-import React from "react";
-import ReactDOMServer from "react-dom/server";
 import express from "express";
 import App from "../src/App";
 import { getRepos } from "./api";
 import APIRouter from "./router/APIRouter";
+import React from "react";
+import ReactDOMServer from "react-dom/server";
+
 
 const PORT = process.env.PORT || 3006;
 const app = express();
