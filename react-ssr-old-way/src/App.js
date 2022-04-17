@@ -1,8 +1,8 @@
 import React from "react";
-import Sidebar from "./Sidebar";
-import Detail from "./Detail";
+import Sidebar from "./components/Sidebar";
+import Detail from "./components/Detail";
 import "./App.scss";
-import Snapshot from "./Snapshot";
+import Snapshot from "./components/Snapshot";
 import { DataProvider } from "./context/DataContext";
 
 const App = ({ data }) => {

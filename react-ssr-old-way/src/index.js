@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 const startHydration = () => {
-  ReactDOM.hydrate(
+  ReactDOM.render(
     <React.StrictMode>
       <App data={window.__INIT_CONTEXT__} />
     </React.StrictMode>,

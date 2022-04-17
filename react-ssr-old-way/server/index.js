@@ -12,9 +12,10 @@ import ReactDOMServer from "react-dom/server";
 const PORT = process.env.PORT || 3006;
 const app = express();
 
+// simulating get big chunks from complex components
 app.use((req, res, next) => {
   if (req.url.endsWith(".js")) {
-    setTimeout(next, 0);
+    setTimeout(next, 3000);
   } else {
     next();
   }

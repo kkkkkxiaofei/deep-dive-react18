@@ -1,22 +1,26 @@
 import React from "react";
-import { useData } from "./hook";
+import { useData } from "../../hook";
+import "./Sidebar.scss";
+import logo from "../../logo.svg";
+import Container from "../../shared/Container";
 
 const Sidebar = () => {
   const { repos = [], selectedRepo, updateSelectedRepo } = useData();
   const handleClick = (repo) => () => updateSelectedRepo(repo);
   return (
-    <div>
-      <h1>Repos</h1>
+    <Container className="menuList" title="Repos" icon={logo}>
       {repos.map((repo) => (
         <div
           key={repo.id}
-          className={`${selectedRepo?.id === repo.id ? "hightlight" : ""}`}
+          className={`${
+            selectedRepo?.id === repo.id ? "menu highlight" : "menu"
+          }`}
           onClick={handleClick(repo)}
         >
           {repo.name}
         </div>
       ))}
-    </div>
+    </Container>
   );
 };
 
