@@ -1,13 +1,22 @@
 import _fetch from "node-fetch";
 
 const BASE_URL = "https://api.github.com";
-
-const baseRequest = (path) =>
-  _fetch(`${BASE_URL}/${path}`, {
+console.log(
+  process.env.GITHUB_ACCESS_TOKEN,
+  "====process.env.GITHUB_ACCESS_TOKEN====="
+);
+const baseRequest = (path) => {
+  const url = `${BASE_URL}/${path}`;
+  console.time(url);
+  return _fetch(url, {
     headers: {
       Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
     },
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch(console.error)
+    .finally(() => console.timeEnd(url));
+};
 
 export const getRepos = () =>
   baseRequest("orgs/reactjs/repos").then((repos) => {
