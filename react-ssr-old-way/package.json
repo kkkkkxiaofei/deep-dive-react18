@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^12.1.4",
-    "@testing-library/user-event": "^13.5.0",
     "css-loader": "^6.7.1",
     "dotenv": "^16.0.0",
     "node-fetch": "^2.6.7",
@@ -21,16 +18,13 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "dev:build-server": "NODE_ENV=development webpack --config webpack.server.config.js --mode=development -w",
     "dev:start": "nodemon ./server-build/index.js",
     "dev": "npm-run-all --parallel build dev:*"
   },
   "eslintConfig": {
     "extends": [
-      "react-app",
-      "react-app/jest"
+      "react-app"
     ]
   },
   "browserslist": {
