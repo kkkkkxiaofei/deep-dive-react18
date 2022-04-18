@@ -12,12 +12,14 @@ export const useFetch = (fetchCall) => {
   const [state, setState] = useState({ isPending: null, data: null });
   useEffect(() => {
     setState({ ...state, isPending: true });
-    fetchCall().then((data) => {
-      setState({
-        data,
-        isPending: false,
-      }).catch(console.error);
-    });
+    fetchCall()
+      .then((data) => {
+        setState({
+          data,
+          isPending: false,
+        });
+      })
+      .catch(console.error);
   }, [fetchCall]);
   return state;
 };

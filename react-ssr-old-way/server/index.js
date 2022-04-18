@@ -8,6 +8,19 @@ import APIRouter from "./router/APIRouter";
 import React from "react";
 import ReactDOMServer from "react-dom/server";
 
+const getServerData = async () => {
+  // simulating slow request
+  await sleep(3000);
+  const repos = await getRepos();
+  const data = {
+    repos,
+    selectedRepo: repos[0],
+  };
+  return data;
+};
+
+const sleep = async (millseconds) =>
+  new Promise((resolve) => setTimeout(resolve, millseconds));
 
 const PORT = process.env.PORT || 3006;
 const app = express();
@@ -48,12 +61,3 @@ app.use("/api", APIRouter);
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
-
-async function getServerData() {
-  const repos = await getRepos();
-  const data = {
-    repos,
-    selectedRepo: repos[0],
-  };
-  return data;
-}

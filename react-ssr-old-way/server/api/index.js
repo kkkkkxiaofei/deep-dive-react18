@@ -1,21 +1,22 @@
 import _fetch from "node-fetch";
 
 const BASE_URL = "https://api.github.com";
-console.log(
-  process.env.GITHUB_ACCESS_TOKEN,
-  "====process.env.GITHUB_ACCESS_TOKEN====="
-);
+
 const baseRequest = (path) => {
   const url = `${BASE_URL}/${path}`;
-  console.time(url);
   return _fetch(url, {
     headers: {
       Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
     },
   })
-    .then((res) => res.json())
-    .catch(console.error)
-    .finally(() => console.timeEnd(url));
+    .then((res) => {
+      if (!res.ok) {
+        throw `Error: ${res.status}`;
+      }
+      return res.json();
+    })
+    .then((data) => data)
+    .catch(console.error);
 };
 
 export const getRepos = () =>
