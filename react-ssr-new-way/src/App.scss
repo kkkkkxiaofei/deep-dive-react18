@@ -1,0 +1,14 @@
+.app {
+  min-height: 100vh;
+  padding: 10px;
+  background-color: #282c34;
+  color: white;
+  display: flex;
+  .sideBar {
+    flex: 1;
+  }
+  .content {
+    flex: 3;
+  }
+}
+
