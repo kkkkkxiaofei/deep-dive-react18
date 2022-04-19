@@ -7,7 +7,7 @@ export const useData = (fetchKey) => {
   if (ctx) {
     ctx[fetchKey].read();
   }
-  return window.__INIT_CONTEXT__ ?? {};
+  return [];
 };
 
 export const useFetch = (fetchCall) => {

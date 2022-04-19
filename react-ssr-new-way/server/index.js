@@ -63,7 +63,7 @@ app.get("/", async (req, res) => {
   let didError = false;
   const data = getServerData();
   const { pipe, abort } = renderToPipeableStream(<App data={data} />, {
-    bootstrapScripts: ["/static/js/main.70cb0e0f.js"],
+    bootstrapScripts: ["/build1/main.js"],
     onCompleteShell() {
       // If something errored before we started streaming, we set the error code appropriately.
       res.statusCode = didError ? 500 : 200;
