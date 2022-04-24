@@ -8,42 +8,6 @@ import APIRouter from "./router/APIRouter";
 import React from "react";
 import { renderToPipeableStream } from "react-dom/server";
 
-const wrapRequest = (_fetch) => {
-  let done = false;
-  let promise = null;
-
-  return {
-    read(...params) {
-      console.log("=======_fetch0========");
-      if (promise) {
-        throw promise;
-      }
-
-      if (done) {
-        return;
-      }
-      promise = new Promise((resolve) =>
-        // simulating slow request
-        setTimeout(() => {
-          console.log("=======_fetch1========");
-          _fetch(params).then((data) => {
-            console.log("=======_fetch2========");
-            done = true;
-            promise = null;
-            resolve(data);
-          });
-        }, 0)
-      );
-      throw promise;
-    },
-  };
-};
-
-const getServerData = () => ({
-  repos: wrapRequest(getRepos),
-  metrics: wrapRequest(getMetrics),
-});
-
 const PORT = process.env.PORT || 3006;
 const app = express();
 
@@ -61,9 +25,24 @@ app.get("/", async (req, res) => {
     console.error("Fatal", error);
   });
   let didError = false;
-  const data = getServerData();
-  const { pipe, abort } = renderToPipeableStream(<App data={data} />, {
-    bootstrapScripts: ["/build1/main.js"],
+  const serverData = {
+    repos: wrapPromise(getRepos, (data) => {
+      res.write(`
+        <script>
+          repos = ${JSON.stringify(data)};
+        </script>
+      `);
+    }),
+    mertics: wrapPromise(getMetrics, (data) => {
+      res.write(`
+        <script>
+          metrics = ${JSON.stringify(data)};
+        </script>
+      `);
+    }),
+  };
+  const { pipe, abort } = renderToPipeableStream(<App data={serverData} />, {
+    bootstrapScripts: ["./main.js"],
     onCompleteShell() {
       // If something errored before we started streaming, we set the error code appropriately.
       res.statusCode = didError ? 500 : 200;
@@ -85,3 +64,26 @@ app.use("/api", APIRouter);
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
+
+function wrapPromise(startFetch, callback) {
+  let done = false;
+  let promise = null;
+  let result = null;
+  return {
+    read(...params) {
+      if (done) {
+        return result;
+      }
+      if (promise) {
+        throw promise;
+      }
+      promise = startFetch(params).then((repos) => {
+        done = true;
+        promise = null;
+        result = repos;
+        callback(repos);
+      });
+      throw promise;
+    },
+  };
+}
