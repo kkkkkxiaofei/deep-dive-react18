@@ -1,40 +1,61 @@
-import React, { Suspense, lazy } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-// import "./App.scss";
-import Html from "./Html";
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
 
-const Sidebar = lazy(() =>
-  import(/* webpackPreload: true */ "./components/Sidebar")
-);
-// const Detail = lazy(() => import("./components/Detail"));
-const Snapshot = lazy(() => import("./components/Snapshot"));
+import {Suspense, lazy} from 'react';
+import {ErrorBoundary} from 'react-error-boundary';
+import Html from './Html';
+import Spinner from './Spinner';
+import Layout from './Layout';
 
-const App = () => {
+const Metrics = lazy(() => import('./Metrics' /* webpackPrefetch: true */));
+const Sidebar = lazy(() => import('./Sidebar' /* webpackPrefetch: true */));
+const Post = lazy(() => import('./Post' /* webpackPrefetch: true */));
+
+export default function App({assets}) {
   return (
-    <Html>
-      <Suspense fallback={<div>loading app...</div>}>
-        <ErrorBoundary
-          FallbackComponent={({ error }) => <div>{error.stack}</div>}
-        >
-          <div className="app">
-            <div className="sideBar">
-              <Suspense fallback={<div>loading sidebar...</div>}>
-                <Sidebar />
-              </Suspense>
-            </div>
-            <div className="content">
-              <Suspense fallback={<div>loading snapshot...</div>}>
-                <Snapshot />
-              </Suspense>
-              {/* <Suspense fallback={<div>loading detail...</div>}>
-                <Detail />
-              </Suspense> */}
-            </div>
-          </div>
+    <Html assets={assets} title="Hello">
+      <Suspense fallback={<Spinner />}>
+        <ErrorBoundary FallbackComponent={Error}>
+          <Content />
         </ErrorBoundary>
       </Suspense>
     </Html>
   );
-};
+}
 
-export default App;
+function Content() {
+  return (
+    <Layout>
+      <aside className="sidebar">
+        <Suspense fallback={<Spinner />}>
+          <Sidebar />
+        </Suspense>
+      </aside>
+      <article className="post">
+        <Suspense fallback={<Spinner />}>
+          <Post />
+        </Suspense>
+        <section className="metrics">
+          <h2>Metrics</h2>
+          <Suspense fallback={<Spinner />}>
+            <Metrics />
+          </Suspense>
+        </section>
+      </article>
+    </Layout>
+  );
+}
+
+function Error({error}) {
+  return (
+    <div>
+      <h1>Application Error</h1>
+      <pre style={{whiteSpace: 'pre-wrap'}}>{error.stack}</pre>
+    </div>
+  );
+}
