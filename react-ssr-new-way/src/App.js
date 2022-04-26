@@ -1,15 +1,17 @@
 import React, { Suspense, lazy } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import "./App.scss";
-import { DataProvider } from "./context/DataContext";
+// import "./App.scss";
+import Html from "./Html";
 
-const Sidebar = lazy(() => import("./components/Sidebar"));
+const Sidebar = lazy(() =>
+  import(/* webpackPreload: true */ "./components/Sidebar")
+);
 // const Detail = lazy(() => import("./components/Detail"));
 const Snapshot = lazy(() => import("./components/Snapshot"));
 
-const App = ({ data }) => {
+const App = () => {
   return (
-    <DataProvider data={data}>
+    <Html>
       <Suspense fallback={<div>loading app...</div>}>
         <ErrorBoundary
           FallbackComponent={({ error }) => <div>{error.stack}</div>}
@@ -25,13 +27,13 @@ const App = ({ data }) => {
                 <Snapshot />
               </Suspense>
               {/* <Suspense fallback={<div>loading detail...</div>}>
-              <Detail />
-            </Suspense> */}
+                <Detail />
+              </Suspense> */}
             </div>
           </div>
         </ErrorBoundary>
       </Suspense>
-    </DataProvider>
+    </Html>
   );
 };
 

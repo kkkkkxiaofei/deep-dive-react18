@@ -7,6 +7,14 @@ import { getMetrics, getRepos } from "./api";
 import APIRouter from "./router/APIRouter";
 import React from "react";
 import { renderToPipeableStream } from "react-dom/server";
+import { DataProvider } from "../src/context/DataContext";
+import babelRegister from "@babel/register"; 
+
+babelRegister({
+  ignore: [/[\\\/](build|server\/server|node_modules)[\\\/]/],
+  presets: [["react-app", { runtime: "automatic" }]],
+  plugins: ["@babel/transform-modules-commonjs"],
+});
 
 const PORT = process.env.PORT || 3006;
 const app = express();
@@ -33,7 +41,7 @@ app.get("/", async (req, res) => {
         </script>
       `);
     }),
-    mertics: wrapPromise(getMetrics, (data) => {
+    metrics: wrapPromise(getMetrics, (data) => {
       res.write(`
         <script>
           metrics = ${JSON.stringify(data)};
@@ -41,19 +49,27 @@ app.get("/", async (req, res) => {
       `);
     }),
   };
-  const { pipe, abort } = renderToPipeableStream(<App data={serverData} />, {
-    bootstrapScripts: ["./main.js"],
-    onCompleteShell() {
-      // If something errored before we started streaming, we set the error code appropriately.
-      res.statusCode = didError ? 500 : 200;
-      res.setHeader("Content-type", "text/html");
-      pipe(res);
-    },
-    onError(x) {
-      didError = true;
-      console.error(x);
-    },
-  });
+  const { pipe, abort } = renderToPipeableStream(
+    <DataProvider data={serverData}>
+      <App />
+    </DataProvider>,
+    {
+      bootstrapScripts: ["./main.js"],
+      onCompleteShell() {
+        // If something errored before we started streaming, we set the error code appropriately.
+        res.statusCode = didError ? 500 : 200;
+        res.setHeader("Content-type", "text/html");
+        pipe(res);
+      },
+      onShellError(...args) {
+        console.log(args, '------');
+      },
+      onError(x) {
+        didError = true;
+        console.error(x);
+      },
+    }
+  );
   // setTimeout(abort, 1000);
 });
 

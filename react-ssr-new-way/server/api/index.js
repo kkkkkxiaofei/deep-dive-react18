@@ -21,6 +21,7 @@ const baseRequest = (path) => {
 
 export const getRepos = () =>
   baseRequest("orgs/reactjs/repos").then((repos) => {
+    console.log("=====repos======", repos.length);
     return repos.map(({ id, name }) => ({ id, name }));
   });
 

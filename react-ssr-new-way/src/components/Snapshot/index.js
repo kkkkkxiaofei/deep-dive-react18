@@ -1,7 +1,7 @@
 import React from "react";
 import { useData } from "../../hook";
 import Container from "../../shared/Container";
-import "./Snapshot.scss";
+// import "./Snapshot.scss";
 
 const Snapshot = () => {
   const metrics = useData("metrics");
