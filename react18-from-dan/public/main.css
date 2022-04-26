@@ -36,11 +36,11 @@ ul, li {
   font-family: Georgia, serif;
 }
 
-.comments {
+.metrics {
   margin-top: 40px;
 }
 
-.comment {
+.metric {
   border: 2px solid #aaa;
   border-radius: 4px;
   padding: 20px;

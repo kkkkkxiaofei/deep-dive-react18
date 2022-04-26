@@ -12,6 +12,7 @@ import { renderToPipeableStream } from "react-dom/server";
 import App from "../src/App";
 import { DataProvider } from "../src/data";
 import { API_DELAY, ABORT_DELAY } from "./delays";
+import { getRepos, getMetrics } from "./api";
 
 // In a real setup, you'd read it from webpack build stats.
 let assets = {
@@ -36,9 +37,25 @@ module.exports = function render(url, res) {
     console.error("Fatal", error);
   });
   let didError = false;
-  const data = createServerData();
+  const serverData = {
+    repos: wrapPromise(getRepos, (data) => {
+      res.write(`
+        <script>
+          repos = ${JSON.stringify(data)};
+          repo = repos[0];
+        </script>
+      `);
+    }),
+    metrics: wrapPromise(getMetrics, (data) => {
+      res.write(`
+        <script>
+          metrics = ${JSON.stringify(data)};
+        </script>
+      `);
+    }),
+  };
   const stream = renderToPipeableStream(
-    <DataProvider data={data}>
+    <DataProvider data={serverData}>
       <App assets={assets} />
     </DataProvider>,
     {
@@ -60,28 +77,29 @@ module.exports = function render(url, res) {
   setTimeout(() => stream.abort(), ABORT_DELAY);
 };
 
-// Simulate a delay caused by data fetching.
-// We fake this because the streaming HTML renderer
-// is not yet integrated with real data fetching strategies.
-function createServerData() {
-  let done = false;
-  let promise = null;
+function wrapPromise(promiseCall, callback) {
+  let status = "pending";
+  let result;
+  let suspender = promiseCall().then(
+    (r) => {
+      status = "success";
+      result = r;
+      callback(result);
+    },
+    (e) => {
+      status = "error";
+      result = e;
+    }
+  );
   return {
     read() {
-      if (done) {
-        return;
+      if (status === "pending") {
+        throw suspender;
+      } else if (status === "error") {
+        throw result;
+      } else if (status === "success") {
+        return result;
       }
-      if (promise) {
-        throw promise;
-      }
-      promise = new Promise((resolve) => {
-        setTimeout(() => {
-          done = true;
-          promise = null;
-          resolve();
-        }, API_DELAY);
-      });
-      throw promise;
-    }
+    },
   };
 }
