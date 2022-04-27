@@ -1,0 +1,25 @@
+.App {
+  font-family: sans-serif;
+}
+
+.panel {
+  display: flex;
+}
+.panel .box {
+  flex: 1;
+}
+
+.display {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.table {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.cell {
+  border: 1px dashed #cccccc;
+  padding: 5px;
+}

@@ -1,0 +1,14 @@
+.App {
+  font-family: sans-serif;
+}
+
+.panel {
+  display: flex;
+}
+.panel .box {
+  flex: 1;
+}
+
+.display {
+  text-align: center;
+}
