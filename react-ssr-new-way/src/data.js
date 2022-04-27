@@ -13,6 +13,6 @@ export function useData(key) {
     // It is here to simulate a suspending data fetch.
     return ctx[key] ? ctx[key].read() : null;
   }
-  // on client
+  // on client, for hydrating
   return window[key];
 }

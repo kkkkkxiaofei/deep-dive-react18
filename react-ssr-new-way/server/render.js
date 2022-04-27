@@ -46,13 +46,17 @@ module.exports = function render(url, res) {
         </script>
       `);
     }),
-    metrics: wrapPromise(getMetrics, (data) => {
-      res.write(`
+    metrics: wrapPromise(
+      getMetrics,
+      (data) => {
+        res.write(`
         <script>
           metrics = ${JSON.stringify(data)};
         </script>
       `);
-    }),
+      },
+      3000 // delay for demonstrating independent hydration
+    ),
     selectedRepo: wrapPromise(() => Promise.resolve()),
   };
   const stream = renderToPipeableStream(
@@ -78,20 +82,23 @@ module.exports = function render(url, res) {
   setTimeout(() => stream.abort(), ABORT_DELAY);
 };
 
-function wrapPromise(promiseCall, callback = ($) => $) {
+function wrapPromise(promiseCall, callback = ($) => $, delay = API_DELAY) {
   let status = "pending";
   let result;
-  let suspender = promiseCall().then(
-    (r) => {
-      status = "success";
-      result = r;
-      callback(result);
-    },
-    (e) => {
-      status = "error";
-      result = e;
-    }
-  );
+
+  let suspender = new Promise((resolve) => setTimeout(resolve, delay))
+    .then(() => promiseCall())
+    .then(
+      (r) => {
+        status = "success";
+        result = r;
+        callback(result);
+      },
+      (e) => {
+        status = "error";
+        result = e;
+      }
+    );
   return {
     read() {
       if (status === "pending") {
