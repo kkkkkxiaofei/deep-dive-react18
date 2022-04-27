@@ -42,7 +42,7 @@ module.exports = function render(url, res) {
       res.write(`
         <script>
           repos = ${JSON.stringify(data)};
-          repo = repos[0];
+          selectedRepo = repos[0];
         </script>
       `);
     }),
@@ -53,6 +53,7 @@ module.exports = function render(url, res) {
         </script>
       `);
     }),
+    selectedRepo: wrapPromise(() => Promise.resolve()),
   };
   const stream = renderToPipeableStream(
     <DataProvider data={serverData}>
@@ -77,7 +78,7 @@ module.exports = function render(url, res) {
   setTimeout(() => stream.abort(), ABORT_DELAY);
 };
 
-function wrapPromise(promiseCall, callback) {
+function wrapPromise(promiseCall, callback = ($) => $) {
   let status = "pending";
   let result;
   let suspender = promiseCall().then(

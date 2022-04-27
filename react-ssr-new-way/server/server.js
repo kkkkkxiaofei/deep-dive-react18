@@ -23,6 +23,7 @@ const {readFileSync} = require('fs');
 const path = require('path');
 const render = require('./render');
 const {JS_BUNDLE_DELAY} = require('./delays');
+const { getRepo } = require("./api");
 
 const PORT = process.env.PORT || 4000;
 const app = express();
@@ -45,6 +46,9 @@ app.get(
     render(req.url, res);
   })
 );
+app.get("/api/repos/:name", (req, res) => {
+  getRepo(req.params.name).then((repo) => res.send(repo));
+});
 app.use(express.static('build'));
 app.use(express.static('public'));
 

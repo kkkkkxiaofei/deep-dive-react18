@@ -14,7 +14,7 @@ import Layout from './Layout';
 
 const Metrics = lazy(() => import('./Metrics' /* webpackPrefetch: true */));
 const Sidebar = lazy(() => import('./Sidebar' /* webpackPrefetch: true */));
-const Post = lazy(() => import('./Post' /* webpackPrefetch: true */));
+const Details = lazy(() => import("./Details" /* webpackPrefetch: true */));
 
 export default function App({assets}) {
   return (
@@ -36,9 +36,9 @@ function Content() {
           <Sidebar />
         </Suspense>
       </aside>
-      <article className="post">
+      <article className="details">
         <Suspense fallback={<Spinner />}>
-          <Post />
+          <Details />
         </Suspense>
         <section className="metrics">
           <h2>Metrics</h2>

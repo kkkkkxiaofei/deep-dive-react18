@@ -11,7 +11,7 @@ export function useData(key) {
   if (ctx !== null) {
     // This context is only provided on the server.
     // It is here to simulate a suspending data fetch.
-    return ctx[key].read();
+    return ctx[key] ? ctx[key].read() : null;
   }
   // on client
   return window[key];

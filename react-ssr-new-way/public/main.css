@@ -17,7 +17,7 @@ nav {
   width: 30%;
 }
 
-.post {
+.details {
   padding: 20px;
   float: left;
   width: 60%;
@@ -31,7 +31,7 @@ ul, li {
   margin: 0;
 }
 
-.post p {
+.details p {
   font-size: larger;
   font-family: Georgia, serif;
 }
