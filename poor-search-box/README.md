@@ -1,0 +1,1 @@
+# This search box perform worst because it blocks the user interaction and causes tearing.

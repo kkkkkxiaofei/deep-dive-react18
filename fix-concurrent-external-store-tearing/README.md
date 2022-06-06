@@ -1,1 +1,1 @@
-TODO
+# Fix the tearing by the hook provided from react team, it will detect if there are multiple versions of state when rendering, it will synchronously update the state before browser render.

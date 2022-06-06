@@ -1,0 +1,1 @@
+# This search box is optimized by the react recommended way of fetching: treating the api as resource and work perfectly with Suspense. The only issue in this workaround is showing the `loading` will lose the previous state.

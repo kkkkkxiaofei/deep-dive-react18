@@ -1,12 +1,12 @@
 # react-ssr-old-way
 
-Demenstrating how ssr works in prior react(before 18).
+Demonstrating how ssr works in prior react(before 18).
 
 ## Prerequisite
 
 - github personal token
 
-For listing the repos and repo detial, you have to inject this token in `.env` at the root folder, please refer to sample in `.sample.env`.
+For listing the repos and repo detail, you have to inject this token in `.env` at the root folder, please refer to sample in `.sample.env`.
 
 ### Get started
 

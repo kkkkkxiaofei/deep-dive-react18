@@ -1,1 +1,1 @@
-TODO
+# Enabling concurrency will downgrade the priority of some render, then when it resumes between slices, it is possible to access stale value which we call tearing.

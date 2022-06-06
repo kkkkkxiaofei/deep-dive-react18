@@ -1,0 +1,1 @@
+# This search box performs best in React 18, it has no major change compared with the `nice-search-box` except keep the previous state until the latest render finishes. 

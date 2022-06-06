@@ -30,7 +30,7 @@ const SearchResult = ({ resource, query = "" }) => {
 const initResource = createSearchResource();
 
 export const SearchBox = () => {
-  const [resouce, setResource] = useState(initResource);
+  const [resource, setResource] = useState(initResource);
   const [query, setQuery] = useState();
   const deferredQuery = useDeferredValue(query);
   const handleOnChange = (val) => {
@@ -39,7 +39,7 @@ export const SearchBox = () => {
     setResource(createSearchResource(val));
   };
   const searchResult = useMemo(
-    () => <SearchResult resource={resouce} query={deferredQuery} />,
+    () => <SearchResult resource={resource} query={deferredQuery} />,
     [deferredQuery]
   );
   return (
